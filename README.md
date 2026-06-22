@@ -1,1 +1,2 @@
-## This application allows trek staff, trekkers to manage trekking activities , bookings and treck  details 
+# trekking-management-app
+This is a flask based trekking management application for managing trekkers, trek staff , bookings and trek details 
