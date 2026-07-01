@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='d-flex justify-content-between align-item-center mb-4'>
+    <h2> Add New Trek </h2>
+    <a href='{{url_for('admin.manage_treks')}}' class='btn btn-secondary'>
+        Back
+    </a>
+</div>
+<div class='card shadow'>
+<div class='card-body'>       
+<form method='POST'>
+    <div class='row'>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Trek Name </label>
+            <input class='form-control' name='name' required >
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Location </label>
+            <input class='form-control' name='location' required >
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Difficulty</label>
+            <select class='form-select' name='difficulty'>
+                <option>Easy </option>
+                <option>Moderate </option>
+                <option>Hard</option>
+            </select>
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Duration (Days)</label>
+            <input type='number' class='form-control' name='duration' required>
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Available Slots</label>
+            <input type='number' class='form-control' name='available_slots' required>
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label'> Assign Staff</label>
+            <select name='staff_id' class='form-select'>
+                {% for staff in staff_members %}
+                <option value='{{staff.staff_id}}'>
+                    {{staff.name}}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class='col-md-6 mb-3' >
+            <label class='form-label'> Start Date </label>
+            <input type='date' class='form-control' name='start_date' required   >
+        </div>
+        <div class='col-md-6 mb-3'>
+            <label class='form-label' > End Date </label>
+            <input type='date' class='form-control' name='end_date' required >
+        </div>
+    </div>
+    <button class='btn btn-success'>
+        Create Trek
+    </button>
+</form>
+</div>
+</div>
+{% endblock %}    
+

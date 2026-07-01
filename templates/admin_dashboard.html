@@ -1,12 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>
-    Welcome Admin
-</h2>
-<p>
-    Admin Dashboard
-</p> 
-<a href='/logout' class='btn btn-danger' >
-    Logout
-</a> 
+<div class='d-flex justify-content-between align-items-center mb-4 '>
+    <div> 
+        <h2>Admin Dashboard </h2>
+        <p class='text-muted'> Welcome back, Admin </P>
+    </div> 
+    <a href='{{ url_for('auth.logout')}}' class='btn btn-danger'> Logout </a> 
+</div>
+
+<div class='row g-4' >
+    <div class='col-md-4'>
+        <div class='card shadow-sm border-primary '>
+            <div class='card-body'>
+                <h5> Total Staff </h5>
+                <h1> {{total_staff }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-4'>
+        <div class='card shadow-sm border-success'  >
+            <div class='card-body'>
+                <h5> Total Trekkers </h5>
+                <h1> {{ total_trekkers }}</h1>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-4'>
+        <div class='card shadow-sm border-warning'>    
+            <div class='card-body' >
+                <h5> Total Treks </h5>
+                <h1> {{total_treks}} </h1>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-6'>
+        <div class='card shadow-sm border-info'>        
+            <div class='card-body'>
+                <h5> Total Bookings</h5>
+                <h1>{{ total_bookings}}</h1>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-6'>
+        <div class='card shadow border-danger'>
+            <div class='card-body'>
+                <h5> Pending Staff Approval</h5>
+                <h2 class='text-danger'> {{pending_staff}} </h2>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class='my-5'>
+<h4> Qucick Actions</h4>
+<div class='d-flex flex-wrap gap-3 mt-3'>
+    <a href='{{ url_for('admin.manage_staff')}}' class='btn btn-primary'> Manage Staff</a>
+    <a href='{{ url_for('admin.manage_treks' )}}' class='btn btn-success'> Manage Treks </a>
+    <a href='{{ url_for('admin.manage_trekkers') }}' class='btn btn-warning'> Manage Trekkers</a>
+    <a href='{{ url_for('admin.view_bookings') }}' class='btn btn-info'> View Bookings </a>
+</div>
 {% endblock %}   
