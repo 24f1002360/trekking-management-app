@@ -1,61 +1,72 @@
 {% extends 'base.html' %}
-{% block content%}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Manage Staff</h2>
-    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary"> Back to Dashboard </a>
+{% block content %}
+<div class="d-flex  justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Manage Staff</h2 >
+        <p class="text-muted ">
+            View and manage all staff members.
+        </p>
+    </div>
+    <a href ="{{ url_for('admin.dashboard') }}" class ="btn btn-secondary">
+        Back to Dashboard
+    </a>
 </div>
-
-{% if pending_staff %}
-
 <div class="card shadow">
-    <div class="card-header bg-primary text-white">
-        Pending Staff Approvals
-    </div>
-    <div class="card-body">
-        <table class="table table-hover align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for staff in pending_staff %}
-                <tr>
-
-                    <td>{{ staff.staff_id }}</td>
-
-                    <td>{{ staff.name }}</td>
-
-                    <td>{{ staff.email }}</td>
-
-                    <td>{{ staff.phone }}</td>
-
-                    <td>
-                        <span class="badge bg-warning text-dark">
-                            {{ staff.status }}
-                        </span>
-
-                    </td>
-                    <td>
-                        <a href="{{ url_for('admin.approve_staff',
-                                            staff_id=staff.staff_id) }}"
-                           class="btn btn-success btn-sm"> Approve
-
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        </table>
-    </div>
+<div class ="card-header bg-primary text-white" >
+    <h5 class="mb-0">
+        Staff Members
+    </h5>
 </div>
-
+<div class="card-body">
+    <table class="table table-hover align-middle">
+<thead class ="table-dark">
+<tr >
+<th>ID </th>
+<th >Name </th>
+<th> Email </th>
+<th> Phone </th>
+<th> Status</th>
+<th>Action</th >
+</tr >
+</thead>
+<tbody >
+{% for staff in staff_members %}
+<tr>
+<td>{{ staff.staff_id }}</td >
+<td>{{ staff.name }} </td>
+<td>{{ staff.email }} </td>
+<td>{{ staff.phone }}</td>
+<td >
+{% if staff.status=="pending" %}
+<span class= "badge bg-warning text-dark"> Pending
+</span >
+{% elif staff.status == "approved" %}
+<span class ="badge bg-success"> Approved
+</span >
 {% else %}
-<div class="alert alert-success">No pending staff approvals. </div>
+<span class="badge bg-danger"> Deactivated
+</span>
 {% endif %}
+</td>
+<td>
+{% if staff.status== "pending"  %}
+<a href ="{{ url_for('admin.approve_staff',staff_id=staff.staff_id) }}" class="btn btn-success btn-sm">
+Approve
+</a>
+{% elif staff.status=="approved" %}
+<a href ="{{ url_for('admin.deactivate_staff',staff_id=staff.staff_id) }}" class="btn btn-danger btn-sm">
+Deactivate
+</a>
+{% else %}
+<a href="{{ url_for('admin.activate_staff',staff_id=staff.staff_id) }}" class="btn btn-primary btn-sm">
+Activate
+</a>
+{% endif %}
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
 {% endblock %}

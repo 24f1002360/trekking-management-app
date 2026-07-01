@@ -26,8 +26,8 @@ def dashboard():
 def manage_staff():
     if session.get('role') != 'Admin':
         return redirect(url_for('auth.login'))
-    pending_staff= Staff.query.filter_by(status='pending').all()
-    return render_template('manage_staff.html', pending_staff=pending_staff)
+    staff_members= Staff.query.all()
+    return render_template('manage_staff.html', staff_members=staff_members)
 @admin.route('/admin/approve/<int:staff_id>')
 def approve_staff(staff_id):
     if session.get('role') != 'Admin':
@@ -35,6 +35,24 @@ def approve_staff(staff_id):
     staff=Staff.query.get_or_404(staff_id)
     staff.status='approved'
     db.session.commit()
+    return redirect(url_for('admin.manage_staff'))
+@admin.route( '/admin/deactivate/<int:staff_id>')
+def deactivate_staff(staff_id):
+    if session.get('role')!='Admin':
+        return redirect(url_for('auth.login'))
+    staff= Staff.query.get_or_404(staff_id)
+    staff.status='deactivated'
+    db.session.commit()
+    flash('staff deactivated successfully!', 'warning')
+    return redirect(url_for('admin.manage_staff'))
+@admin.route('/admin/activate/<int:staff_id>')
+def activate_staff(staff_id):
+    if session.get('role')!= 'Admin':
+        return redirect(url_for('auth.login'))
+    staff= Staff.query.get_or_404(staff_id)
+    staff.status='approved'
+    db.session.commit()
+    flash('staff activated successfully!', 'success')
     return redirect(url_for('admin.manage_staff'))
 
 
