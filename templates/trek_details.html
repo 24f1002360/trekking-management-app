@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div >
+        <h2>{{ trek.name  }}</h2 >
+        <p class = "text-muted" > Trek Details </p>
+    </div>
+    <a href="{{ url_for('staff.assigned_treks') }}" class="btn btn-secondary">
+       Back
+    </a>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Location:</strong> {{ trek.location }}</p>
+                <p><strong>Difficulty:</strong> {{ trek.difficulty }}</p>
+                <p><strong>Duration:</strong> {{ trek.duration }} Days </p >
+            </div>
+            <div class="col-md-6">
+                <p><strong >Available Slots: </strong> {{ trek.available_slots }}</p>
+                <p><strong > Start Date:</strong> {{ trek.start_date.strftime('%d-%m-%Y') }}</p>
+                <p><strong> End Date: </strong> {{ trek.end_date.strftime('%d-%m-%Y') }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class= "card shadow mb-4">
+    <div class = "card-header bg-success text-white">
+        Update Trek Status
+    </div>
+    <div class="card-body">
+         <form method="POST"
+              action="{{ url_for('staff.update_status', trek_id=trek.trek_id) }}">
+            <div class="row">
+                 <div class="col-md-8">
+                    <select name="status"class="form-select">
+                        <option value ="open"
+                        {% if trek.status =="open" %}selected{% endif %}>
+                            open
+                        </option>
+                        <option  value='ongoing'
+                        {% if trek.status=="ongoing" %}selected{% endif %}>
+                            ongoing
+                        </option>
+                        <option value="completed"
+                        {% if trek.status=='completed' %} selected {% endif %}>
+                            completed
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4" >
+                    <button class="btn btn-success w-100">
+                        Update Status
+                    </button >
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        Registered Trekkers
+    </div>
+    <div class="card-body">
+        {% if bookings %}
+        <table class="table table-hover">
+            <thead> 
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Name</th >
+                    <th>Email </th>
+                    <th >Booking Date</th>
+                </tr>
+            </thead >
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td> {{ booking.booking_id }}</td>
+                    <td>{{ booking.trekker.name }} </td>
+                    <td >{{ booking.trekker.email }}</td>
+                    <td> {{ booking.booking_date.strftime( '%d-%m-%Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info"> No bookings yet. </div >        {% endif %}
+        </div>
+</div>
+{% endblock %}
