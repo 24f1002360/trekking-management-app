@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='d-flex justify-content-between align-items-center mb-4'>
+    <div> 
+        <h2> Browse Treks</h2>
+        <p class='text-muted'>
+            Book your next adventure.
+        </p>
+    </div>
+    <a href='{{ url_for('user.dashboard')}}' class='btn btn-secondary'>
+        Dashboard
+    </a>
+</div>
+<form method='GET' action='{{ url_for('user.browse_treks')}}' class='row mb-4'>
+    <div class='col-md-10'>
+        <input type='text' class='form-control' name='search' placeholder='Search trek by name...' value='{{ search}}'>
+    </div>
+    <div class='col-md-2'>
+        <button class='btn btn-primary w-100'> Search </button>
+    </div>
+</form>
+{% if treks %}
+<div class='card shadow'>
+    <div class='card-header bg-success text-white'>
+        <h5 class='mb-0'> Available Treks</h5>
+    </div>
+    <div class='card-body'>
+        <table class='table table-hover align-middle'>
+            <thead class='table-dark'>
+                <tr>
+                    <th>ID </th>
+                    <th> Name </th>
+                    <th> Location </th>
+                    <th> Difficulty </th>
+                    <th> Duration </th>
+                    <th> Slots </th>
+                    <th> Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for trek in treks %}
+            <tr>
+                <td > {{ trek.trek_id}}</td>
+                <td> {{ trek.name}}</td>
+                <td> {{ trek.location }}</td>
+                <td> {% if trek.difficulty == 'Easy' %} 
+                    <span class='badge bg-success'>Easy</span>
+                    {% elif trek.difficulty =='Medium' %}
+                    <span class='badge bg-warning text-dark'>Medium</span>
+                    {% else %}
+                    <span class='badge bg-danger'> Hard</span>
+                    {% endif %}
+                </td>
+                <td>{{ trek.duration }} Days</td>
+                <td> {{trek.available_slots }}</td>
+                <td> 
+                    <a href='{{ url_for('user.book_trek', trek_id=trek.trek_id)}}' class='btn btn-success btn-sm'>
+                        Book 
+                    </a>
+                </td>
+            </tr>
+            {% endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class='alert alert-info'>
+    No treks available.
+</div>
+{% endif %}
+{% endblock %}
+

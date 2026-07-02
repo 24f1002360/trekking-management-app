@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4" >
+    <div>
+        <h2> Edit Profile </h2 >
+        <p class="text-muted">
+            Update your personal information.
+        </p>
+    </div>
+    <a href="{{ url_for('user.profile') }}" class="btn btn-secondary" >
+        Back
+    </a>
+</div>
+<div class="card shadow">
+    <div class="card-header bg-warning" >
+        <h5 class="mb-0" > Edit Information </h5>
+    </div >
+    <div class="card-body">
+        <form method="POST" >
+            <div class="mb-3">
+                <label class="form-label "> Name </label>
+                <input type= "text" name= "name" class="form-control" value="{{ trekker.name }}" required>
+            </div>
+            <div class="mb-3" >
+                <label class='form-label'> Phone </label>
+                <input type="text" name="phone" class="form-control" value="{{ trekker.phone }}" required>
+            </div >
+            <div class="mb-4">
+                <label class="form-label"> New Password </label>
+                <input type="password"  name="password" class="form-control">
+                <small class='text-muted' > Leave blank if you do not want to change your password.</small>
+            </div>
+            <button type="submit" class="btn btn-success"> Save Changes </button>
+            <a href="{{ url_for('user.profile') }}" class="btn btn-secondary ">
+                Cancel
+            </a>
+        </form >
+    </div >
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>My Bookings </h2>
+        <p class="text-muted" >
+            View all your trekking bookings.
+        </p >
+    </div >
+    <a href="{{ url_for('user.dashboard') }}" class="btn btn-secondary" >
+        Dashboard
+    </a>
+</div>
+{% if bookings %}
+<div class="card shadow" >
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Booking History</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark" >
+                <tr>
+                    <th> Booking ID</th>
+                    <th >Trek </th>
+                    <th>Location </th>
+                    <th> Status</th >
+                    <th>Action</th >
+                </tr>
+            </thead >
+            <tbody >
+            {% for booking in bookings %}
+            <tr>
+                <td > {{ booking.booking_id }} </td>
+                <td>{{ booking.trek.name }} </td>
+                <td>{{ booking.trek.location }} </td >
+                <td>
+                    {% if booking.status == 'Booked' %}
+                    <span class="badge bg-success" >
+                        Booked
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger">
+                        Cancelled
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.status == 'Booked' and booking.trek.status == 'open' %}
+                    <a href="{{ url_for('user.cancel_bookings', booking_id=booking.booking_id) }}" class="btn btn-danger btn-sm" >
+                        Cancel
+                    </a>
+                    {% else %}
+                    <span class="text-muted ">
+                        --
+                    </span>
+                    {% endif %}
+                </td >
+            </tr>
+            {% endfor %}
+            </tbod y>
+        </table>
+     </div >
+</div>
+{% else %}
+<div class="alert alert-info" >
+    You have not booked any treks yet.
+</div>
+{% endif %}
+{% endblock %}

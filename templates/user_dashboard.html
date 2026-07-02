@@ -1,13 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>
-    Welcome Trekker 
-</h2>
-<p>
-    User Dashboard 
-</p>
-<a href="/logout" class='btn btn-danger'>
-    Logout
-</a>
+<div class='d-flex justify-content-between align-items-center mb-4'>
+    <div >
+        <h2> Trekker Dashboard </h2>
+        <p class='text-muted'>
+            Welcome, {{ trekker.name}}
+        </p>
+    </div >
+    <div class='d-felx gap-3 mt-3'>
+        <a href='{{ url_for('user.browse_treks') }}' class='btn btn-success'>
+            Browse treks 
+        </a >
+        <a href='{{ url_for('auth.logout')}}' class='btn btn-danger'>Logout </a>
+    </div>
+</div>
+<div class='row'>
+    <div class='col-md-4 mb-3'>
+        <div class='card text-center shadow'>
+            <div class='card body'>
+                <h1>{{ total_bookings}}</h1>
+                <h5> Total Bookings</h5>
+            </div>
+        </div>
+    </div >
+    <div class='col-md-4 mb-3'>
+        <div class='card text-center shadow'>
+            <div class='card body' >
+                <h1 > {{ upcoming }}</h1>
+                <h5 > Upcoming Treks</h5>
+            </div>
+        </div >
+    </div>
+    <div class='col-md-4 mb-3'>
+        <div class='card text-center shadow' >
+            <div class='card body' >
+                <h1> {{ completed }}</h1>
+                <h5> Completed Treks </h5>     
+            </div>
+        </div >
+    </div>
+</div>
+<hr class='my-5'>
+<h4 > Quick Actions </h4>
+<div class='d-felx gap-3 mt-3'>
+    <a href='{{ url_for('user.my_bookings')}}' class='btn btn-primary'>
+        My Bookings
+    </a>
+    <a href='{{ url_for('user.profile')}}' class='btn btn-warning'>
+        Profile
+    </a>
+</div>  
 {% endblock %}
-           
