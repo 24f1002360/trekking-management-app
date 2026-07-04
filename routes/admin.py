@@ -26,8 +26,15 @@ def dashboard():
 def manage_staff():
     if session.get('role') != 'Admin':
         return redirect(url_for('auth.login'))
-    staff_members= Staff.query.all()
-    return render_template('manage_staff.html', staff_members=staff_members)
+    search = request.args.get('search', '').strip()
+    if search:
+        if search.isdigit():
+            staff_members = Staff.query.filter(Staff.staff_id == int(search)).all()
+        else:
+            staff_members = Staff.query.filter(Staff.name.ilike(f'%{search}%')).all()
+    else:
+        staff_members = Staff.query.all()
+    return render_template('manage_staff.html', staff_members=staff_members, search=search)
 @admin.route('/admin/approve/<int:staff_id>')
 def approve_staff(staff_id):
     if session.get('role') != 'Admin':
@@ -60,9 +67,17 @@ def activate_staff(staff_id):
 def manage_treks():
     if session.get('role') !='Admin':
         return redirect(url_for("auth.login"))
-    treks = Trek.query.all()
-    staff_members= Staff.query.filter_by(status="approved").all()
-    return render_template('manage_treks.html', treks=treks, staff_members=staff_members )
+    search = request.args.get('search', '').strip()
+    query= Trek.query
+    if search: 
+        if search.isdigit():
+            query = query.filter(Trek.trek_id == int(search))
+        else:
+            query = query.filter((Trek.name.ilike(f'%{search}%')) |
+                                 (Trek.location.ilike(f'%{search}%')))
+    treks= query.all()
+    staff_members = Staff.query.filter_by(status='approved').all()
+    return render_template('manage_treks.html', treks=treks, staff_members= staff_members, search=search)
 @admin.route("/admin/add-trek", methods=['GET', 'POST'])
 def add_trek():
     if session.get('role') != 'Admin':
@@ -82,10 +97,13 @@ def add_trek():
     if existing:
         flash('Trek already exists.', 'danger')
         return redirect(url_for('admin.add_trek'))
+    conflict = Trek.query.filter(Trek.staff_id == staff_id, Trek.start_date <=end_date , Trek.end_date>= start_date).first()
+    if conflict:
+        flash('Selected staff is already assigned to another trek during this period.', 'danger')
+        return redirect(url_for('admin.add_trek'))
     trek = Trek(name=name, location=location, difficulty=difficulty, duration=duration, available_slots=available_slots, staff_id=staff_id, status='open', start_date=start_date, end_date=end_date )
     db.session.add(trek)
     db.session.commit()
-    
     flash('Trek added successfully!', "success")
     return redirect(url_for('admin.manage_treks'))
 @admin.route('/admin/edit-trek/<int:trek_id>', methods=['GET', 'POST'])
@@ -105,6 +123,17 @@ def edit_trek(trek_id):
     trek.start_date = datetime.strptime(request.form['start_date'],'%Y-%m-%d').date()
     trek.end_date = datetime.strptime(request.form['end_date'], '%Y-%m-%d').date()
     trek.status = request.form['status']
+    if trek.status == "completed":
+        for booking in trek.bookings:
+            if booking.status == "Booked":
+                booking.status = "Completed"
+    staff_id = int(request.form['staff_id'])
+    start_date = datetime.strptime( request.form['start_date'], "%Y-%m-%d").date()
+    end_date = datetime.strptime( request.form['end_date'], "%Y-%m-%d").date()
+    conflict = Trek.query.filter(Trek.staff_id == staff_id, Trek.trek_id !=trek_id, Trek.start_date <=end_date , Trek.end_date>= start_date).first()
+    if conflict:
+        flash('Selected staff is already assigned to another trek during this period.', 'danger')
+        return redirect(url_for('admin.edit_trek'))
     db.session.commit()
     flash('Trek updated successfully!' , 'success')
     return redirect(url_for('admin.manage_treks'))
@@ -127,8 +156,15 @@ def delete_trek(trek_id):
 def manage_trekkers():
     if session.get('role') != 'Admin':
         return redirect(url_for('auth.login'))
-    trekkers= Trekker.query.all()
-    return render_template('manage_trekkers.html', trekkers=trekkers)
+    search = request.args.get('search', '').strip()
+    if search :
+        if search.isdigit():
+            trekkers = Trekker.query.filter(Trekker.trekker_id == int(search)).all()
+        else:
+            trekkers= Trekker.query.filter(Trekker.name.ilike(f'%{search}%')).all()
+    else:
+        trekkers=Trekker.query.all()
+    return render_template('manage_trekkers.html', trekkers=trekkers, search=search)
 @admin.route('/admin/blacklist/<int:trekker_id>')
 def blacklist_trekker(trekker_id):
     if session.get('role') != 'Admin':

@@ -6,6 +6,16 @@
        class="btn btn-primary"> + Add New Trek
     </a>
 </div>
+<form method="GET" class="row mb-4">
+    <div class="col-md-10">
+        <input type="text" name="search" class="form-control" placeholder="Search Trek by Name, Location or ID..." value="{{ search }}">
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">
+            Search
+        </button>
+    </div>
+</form>
 {% if treks %}
 <div class="card shadow">
 <div class="card-body">

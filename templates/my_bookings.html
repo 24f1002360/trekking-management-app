@@ -23,7 +23,9 @@
                     <th> Booking ID</th>
                     <th >Trek </th>
                     <th>Location </th>
-                    <th> Status</th >
+                    <th> Booking Status</th >
+                    <th> Trek Status </th>
+                    <th > Details </th>
                     <th>Action</th >
                 </tr>
             </thead >
@@ -38,26 +40,54 @@
                     <span class="badge bg-success" >
                         Booked
                     </span>
-                    {% else %}
+                    {% elif booking.status == "Cancelled" %}
                     <span class="badge bg-danger">
                         Cancelled
+                    </span>
+                    {% elif booking.status == "Completed" %}
+                    <span class="badge bg-primary">
+                        Completed
                     </span>
                     {% endif %}
                 </td>
                 <td>
+                    {% if booking.trek.status == 'open'%}
+                        <span class='badge bg-success'>
+                            open
+                        </span>
+                        {% elif booking.trek.status=='ongoing' %}
+                        <span class='badge bg-warning text-dark'>
+                            ongoing
+                        </span>
+                        {% elif booking.trek.status == 'completed' %}
+                        <span class='badge bg-primary' >
+                            completed 
+                        </span>
+                        {% else %}
+                        <span class='badge bg-secondary'>
+                            {{ booking.trek.status }}
+                        </span>
+                        {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('user.trek_details', trek_id=booking.trek.trek_id) }}" class="btn btn-info btn-sm">
+                        View
+                    </a>
+                </td>
+                <td>
                     {% if booking.status == 'Booked' and booking.trek.status == 'open' %}
-                    <a href="{{ url_for('user.cancel_bookings', booking_id=booking.booking_id) }}" class="btn btn-danger btn-sm" >
+                    <a href="{{ url_for('user.cancel_bookings', booking_id=booking.booking_id) }}" class="btn btn-danger btn-sm">
                         Cancel
                     </a>
                     {% else %}
-                    <span class="text-muted ">
+                    <span class="text-muted">
                         --
                     </span>
                     {% endif %}
-                </td >
+                </td>
             </tr>
             {% endfor %}
-            </tbod y>
+            </tbody>
         </table>
      </div >
 </div>

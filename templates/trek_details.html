@@ -58,9 +58,29 @@
         </form>
     </div>
 </div>
+<div class='card chadow mb-4'>
+    <div class='card-header bg-warning'>
+        Update Available Slots 
+    </div >
+    <div class='card-body'>
+        <form method='POST' action='{{ url_for('staff.update_slots', trek_id=trek.trek_id)}}'>
+            <div class='row'>
+                <div class='col-md-8'>
+                    <input type='number' class='form-control' name='available_slots' min='0' value='{{ trek.available_slots }}' required >
+                </div>
+                <div class='col-md-4'>
+                    <button class='btn btn-warning w-100'>
+                        Update Slots
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div >
+
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
-        Registered Trekkers
+        Registered Participants
     </div>
     <div class="card-body">
         {% if bookings %}
@@ -70,6 +90,8 @@
                     <th>Booking ID</th>
                     <th>Name</th >
                     <th>Email </th>
+                    <th > Phone </th>
+                    <th > Booking Status </th>
                     <th >Booking Date</th>
                 </tr>
             </thead >
@@ -79,6 +101,21 @@
                     <td> {{ booking.booking_id }}</td>
                     <td>{{ booking.trekker.name }} </td>
                     <td >{{ booking.trekker.email }}</td>
+                    <td> {{ booking.trekker.phone }}</td>
+                    <td> {% if booking.status == "Booked" %}
+                        <span class="badge bg-success">
+                            Booked
+                        </span>
+                        {% elif booking.status == "Completed" %}
+                        <span class="badge bg-primary">
+                            Completed
+                        </span>
+                        {% else %}
+                        <span class="badge bg-danger">
+                            Cancelled
+                        </span>
+                        {% endif %}
+                    </td>
                     <td> {{ booking.booking_date.strftime( '%d-%m-%Y') }}</td>
                 </tr>
                 {% endfor %}
