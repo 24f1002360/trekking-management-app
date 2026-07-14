@@ -85,6 +85,6 @@ def edit_profile():
     password = request.form['password']
     if password:
         staff_member.hash_password= generate_password_hash(password)
-    db.sesson.commit()
+    db.session.commit()
     flash('Profile updated successfully!', 'success')
     return redirect(url_for('staff.profile'))
